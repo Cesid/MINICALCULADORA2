@@ -16,6 +16,7 @@ public class MiniCalculadora extends javax.swing.JFrame {
      */
     public MiniCalculadora() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -28,30 +29,36 @@ public class MiniCalculadora extends javax.swing.JFrame {
     private void initComponents() {
 
         txfNum1 = new javax.swing.JTextField();
-        txFResultado = new javax.swing.JTextField();
+        txfResultado = new javax.swing.JTextField();
         txfNum2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        comboBox = new javax.swing.JComboBox();
+        boton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Minicalculadora");
 
         txfNum1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txfNum1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfNum1.setText("0");
 
-        txFResultado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txFResultado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txFResultado.setText("0");
+        txfResultado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txfResultado.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txfResultado.setText("0");
 
         txfNum2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txfNum2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfNum2.setText("0");
 
-        jComboBox1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "+", "-", "*", "/" }));
+        comboBox.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "+", "-", "*", "/" }));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setText("=");
+        boton.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        boton.setText("=");
+        boton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calcular(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,13 +68,13 @@ public class MiniCalculadora extends javax.swing.JFrame {
                 .addGap(49, 49, 49)
                 .addComponent(txfNum1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(txfNum2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(boton)
                 .addGap(18, 18, 18)
-                .addComponent(txFResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txfResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -76,15 +83,52 @@ public class MiniCalculadora extends javax.swing.JFrame {
                 .addGap(74, 74, 74)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfNum1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txFResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txfResultado, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txfNum2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(boton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void calcular(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcular
+        Numero n1 = new Numero(txfNum1.getText(), ',');
+        Numero n2 = new Numero(txfNum2.getText(), ',');
+        double num1 = n1.getNumero();
+        double num2 = n2.getNumero();
+        double resul = 0;
+        if (num1 == Double.MAX_VALUE || num2 == Double.MAX_VALUE) {
+            txfResultado.setText("error");
+        } else {
+            String operacion = (String) comboBox.getSelectedItem();
+            switch (operacion) {
+                case "+":
+                    resul = num1 + num2;
+                    break;
+                case "-":
+                    resul = num1 - num2;
+                    break;
+                case "*":
+                    resul = num1 * num2;
+                    break;
+                case "/":
+                    if (num2 == 0) {
+                        resul = Double.MAX_VALUE;
+                    } else {
+                        resul = num1 / num2;
+                    }
+            }
+            if (resul == Double.MAX_VALUE) {
+                txfResultado.setText("error");
+
+            } else {
+                Numero resultado = new Numero(resul);
+                txfResultado.setText(resultado.toString());
+            }
+        }
+    }//GEN-LAST:event_calcular
 
     /**
      * @param args the command line arguments
@@ -122,10 +166,10 @@ public class MiniCalculadora extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JTextField txFResultado;
+    private javax.swing.JButton boton;
+    private javax.swing.JComboBox comboBox;
     private javax.swing.JTextField txfNum1;
     private javax.swing.JTextField txfNum2;
+    private javax.swing.JTextField txfResultado;
     // End of variables declaration//GEN-END:variables
 }
